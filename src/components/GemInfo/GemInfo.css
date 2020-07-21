@@ -1,0 +1,24 @@
+.GemInfo {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid black;
+  margin: 0 5%;
+}
+.GemName {
+  font-weight: bold;
+  font-size: x-large;
+  margin-right: .6em;
+}
+
+.GemName:hover {
+  color: #9b111e;
+}
+
+.RightBlock {
+  display: flex;
+  align-items: center;
+}
+
+button {
+  border: none;
+}

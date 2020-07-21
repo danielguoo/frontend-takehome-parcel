@@ -1,10 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import GemsList from './src/GemsList'
+import GemsSearchPage from './src/components/GemsSearchPage'
 
 class App extends React.Component {
   render() {
-    return <GemsList/>;
+    return <GemsSearchPage/>;
   }
 }
 

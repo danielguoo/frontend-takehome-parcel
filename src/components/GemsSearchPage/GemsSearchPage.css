@@ -1,0 +1,33 @@
+* {
+  font-family: Arial;
+}
+
+h3 {
+  margin-left: 5%;
+}
+
+.Search {
+  text-align: center;
+}
+
+.Toggle {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.Toggle button {
+  padding: 5px;
+  color: white
+}
+
+.Toggle button:hover {
+  cursor: pointer;
+}
+
+.Selected {
+  background-color: green;
+}
+
+.Unselected {
+  background-color: grey;
+}
