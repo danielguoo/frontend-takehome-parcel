@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import SearchResultsList from '../SearchResultsList';
 import SavedGemsList from '../SavedGemsList';
+import Toggle from '../Toggle';
 import './GemsSearchPage.css';
+import { MdSearch } from "react-icons/md";
+import ReactLoading from "react-loading";
 
 const API_URL = 'http://localhost:3000/api/v1/search.json';
 
@@ -14,6 +17,7 @@ export default class GemsSearchPage extends Component {
       savedGems: localStorage.getItem('savedGems') ? JSON.parse(localStorage.getItem('savedGems')) : {},
       errorMessage: '',
       searchView: true,
+      loading: false,
     };
   } 
 
@@ -22,17 +26,24 @@ export default class GemsSearchPage extends Component {
   }
 
   handleSubmit = (e) =>  {
+    this.toggleLoading()
     // Refactor to recrusive pagination
     fetch(`${API_URL}?query=${this.state.searchValue}`)
       // What if there are multiple pages of gems? add param &page=2
       .then(response => response.json())
       .then(data => {
         data.length === 0 ?
-          this.setState({errorMessage: 'No results found'}) :
-          this.setState({searchedGems: data, errorMessage: ''});
+        this.setState({errorMessage: 'No results found.', loading: false}) :
+        this.setState({searchedGems: data, errorMessage: '', searchView: true, loading: false});
+      }).catch(e => {
+        this.setState({errorMessage: 'There was an error searching your query. Please try again.', loading: false})
       });
       // Error handling!
     e.preventDefault();
+  }
+
+  toggleLoading = () => {
+    this.setState({loading: !this.state.loading})
   }
 
   toggleSaveGem = (gem) => {
@@ -51,54 +62,54 @@ export default class GemsSearchPage extends Component {
     this.setState({searchView});
   }
 
-  render() {
-    const { searchValue, searchedGems, savedGems, errorMessage, searchView } = this.state;
+  render() {    
+    const { searchValue, searchedGems, savedGems, errorMessage, searchView, loading } = this.state;
     return (
-      <div>
-        <div className="Search">
-          <h2> Search for Ruby Gems! </h2>
-          <form onSubmit={this.handleSubmit}>
-            <input type="text" value={searchValue} onChange={this.handleChange} />
-            <input type="submit" value="Submit" />
-          </form>
-        </div>
-        <div className="Toggle">
-          <button 
-            className={searchView ? "Selected" : "Unselected"}
-            onClick={() => this.toggleSearchView(true)}
-          > 
-            Search Results
-          </button>
-          <button
-            className={searchView ? "Unselected" : "Selected"}
-            onClick={() => this.toggleSearchView(false)}
-          > 
-            Saved Results
-          </button>
-        </div>
-        {searchView ?
-          <div>
-            <h3> Search Results: </h3>
-            {
-              errorMessage ?
-              <p> {errorMessage} </p> :
-              <SearchResultsList
-                searchedGems={searchedGems}
-                savedGems={savedGems}
-                toggleSaveGem={this.toggleSaveGem}
-              />
-            }
-            <br/>
-          </div>
+      <div className="Container">
+        <Search
+          searchValue={searchValue}
+          handleChange={this.handleChange}
+          handleSubmit={this.handleSubmit}
+        />
+        <Toggle 
+          toggleSearchView={this.toggleSearchView}
+          searchView={searchView}
+        />
+        {loading ? 
+          <ReactLoading 
+            className="Loading"
+            type='spinningBubbles'
+            color='#a5aeaf'
+            height='36px'
+            width='36px'
+          />
           :
-          <div>
+          searchView ?
+            <SearchResultsList
+              errorMessage={errorMessage}
+              searchedGems={searchedGems}
+              savedGems={savedGems}
+              toggleSaveGem={this.toggleSaveGem}
+            />
+            :
             <SavedGemsList
               savedGems={savedGems}
               toggleSaveGem={this.toggleSaveGem}
             />
-          </div>
-        }
+          }
       </div>
     )
   }
 }
+
+const Search = ({searchValue, handleChange, handleSubmit}) => (
+  <form className="Search" onSubmit={handleSubmit}>
+    <input 
+      type="text"
+      placeholder="Search for Ruby Gems!"
+      value={searchValue}
+      onChange={handleChange}
+    />
+    <button type="submit"> <MdSearch/> </button>
+  </form>
+)

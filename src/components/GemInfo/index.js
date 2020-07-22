@@ -1,5 +1,7 @@
 import React from 'react'
 import './GemInfo.css'
+import { MdStar, MdStarBorder } from "react-icons/md";
+import { IconContext } from "react-icons";
 
 export default ({ gem, isSaved, toggleSaveGem }) => {
   return (
@@ -13,7 +15,11 @@ export default ({ gem, isSaved, toggleSaveGem }) => {
       </div>
       <div className="RightBlock">
         <button onClick={() => toggleSaveGem(gem)}>
-          {isSaved ? 'Unsave' : ' Save'}
+          <IconContext.Provider value ={{size: "30px", color: "gold"}}>
+            {isSaved ? 
+              <MdStar className="Icon"/> :
+              <MdStarBorder className="Icon"/>}
+          </IconContext.Provider>
         </button>
       </div>
 

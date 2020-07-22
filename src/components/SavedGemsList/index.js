@@ -7,10 +7,9 @@ export default ({ savedGems, toggleSaveGem }) => {
 
   return (
     <div>
-      <h3>Saved Gems:</h3>
       {
         savedGemsArray.length === 0 ?
-        <p> Search and save for a gem! </p>
+        <p className="Message"> Search and save for gems to see them appear here. </p>
         :
         <ul>
         {
