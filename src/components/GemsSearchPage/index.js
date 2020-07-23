@@ -15,7 +15,7 @@ export default class GemsSearchPage extends Component {
       searchValue: '',
       searchedGems: [],
       savedGems: localStorage.getItem('savedGems') ? JSON.parse(localStorage.getItem('savedGems')) : {},
-      errorMessage: '',
+      message: 'Search for a gem to see results.',
       searchView: true,
       loading: false,
     };
@@ -26,24 +26,22 @@ export default class GemsSearchPage extends Component {
   }
 
   handleSubmit = (e) =>  {
-    this.toggleLoading()
-    // Refactor to recrusive pagination
+    this.startLoading()
     fetch(`${API_URL}?query=${this.state.searchValue}`)
       // What if there are multiple pages of gems? add param &page=2
       .then(response => response.json())
       .then(data => {
         data.length === 0 ?
-        this.setState({errorMessage: 'No results found.', loading: false}) :
-        this.setState({searchedGems: data, errorMessage: '', searchView: true, loading: false});
+        this.setState({message: 'No results found.', loading: false}) :
+        this.setState({searchedGems: data, message: '', searchView: true, loading: false});
       }).catch(e => {
-        this.setState({errorMessage: 'There was an error searching your query. Please try again.', loading: false})
+        this.setState({message: 'There was an error while searching for your query. Please try again.', loading: false})
       });
-      // Error handling!
     e.preventDefault();
   }
 
-  toggleLoading = () => {
-    this.setState({loading: !this.state.loading})
+  startLoading = () => {
+    this.setState({loading: true})
   }
 
   toggleSaveGem = (gem) => {
@@ -63,7 +61,7 @@ export default class GemsSearchPage extends Component {
   }
 
   render() {    
-    const { searchValue, searchedGems, savedGems, errorMessage, searchView, loading } = this.state;
+    const { searchValue, searchedGems, savedGems, message, searchView, loading } = this.state;
     return (
       <div className="Container">
         <Search
@@ -86,7 +84,7 @@ export default class GemsSearchPage extends Component {
           :
           searchView ?
             <SearchResultsList
-              errorMessage={errorMessage}
+              message={message}
               searchedGems={searchedGems}
               savedGems={savedGems}
               toggleSaveGem={this.toggleSaveGem}

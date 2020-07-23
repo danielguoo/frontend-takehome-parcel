@@ -2,14 +2,16 @@ import React from 'react';
 import GemInfo from '../GemInfo';
 import './SavedGemsList.css';
 
+const NO_GEMS_SAVED_MESSAGE = 'Search and save for gems to see them appear here.';
+
 export default ({ savedGems, toggleSaveGem }) => {
   const savedGemsArray = Object.values(savedGems);
-
+  
   return (
     <div>
       {
         savedGemsArray.length === 0 ?
-        <p className="Message"> Search and save for gems to see them appear here. </p>
+        <p className="Message">{NO_GEMS_SAVED_MESSAGE}</p>
         :
         <ul>
         {

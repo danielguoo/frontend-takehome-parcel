@@ -1,5 +1,5 @@
-import React from 'react'
-import './GemInfo.css'
+import React from 'react';
+import './GemInfo.css';
 import { MdStar, MdStarBorder } from "react-icons/md";
 import { IconContext } from "react-icons";
 
@@ -8,10 +8,10 @@ export default ({ gem, isSaved, toggleSaveGem }) => {
     <div className="GemInfo">
       <div className="LeftBlock">
         <p> 
-          <span className="GemName"> {gem.name} </span>
+          <span className="GemName">{gem.name}</span>
           <i>{gem.version}</i>
         </p>
-        <p> {gem.info} </p>
+        <p>{gem.info}</p>
       </div>
       <div className="RightBlock">
         <button onClick={() => toggleSaveGem(gem)}>
