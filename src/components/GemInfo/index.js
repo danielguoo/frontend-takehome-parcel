@@ -15,7 +15,7 @@ export default ({ gem, isSaved, toggleSaveGem }) => {
       </div>
       <div className="RightBlock">
         <button onClick={() => toggleSaveGem(gem)}>
-          <IconContext.Provider value ={{size: "30px", color: "gold"}}>
+          <IconContext.Provider value={{size: "30px", color: "gold"}}>
             {isSaved ? 
               <MdStar className="Icon"/> :
               <MdStarBorder className="Icon"/>}

@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import SearchResultsList from '../SearchResultsList';
 import SavedGemsList from '../SavedGemsList';
 import Toggle from '../Toggle';
-import SearchBar from '../SearchBar'
+import SearchBar from '../SearchBar';
 import './GemsSearchPage.css';
 import ReactLoading from "react-loading";
 
 const API_URL = 'http://localhost:3000/api/v1/search.json';
 const API_ERROR = 'There was an error while searching for your query. Please try again.';
-const NO_RESULTS_SEARCH_MESSAGE = 'No results found.'
+const NO_RESULTS_SEARCH_MESSAGE = 'No results found.';
 
 export default class GemsSearchPage extends Component {
   constructor(props) {
@@ -17,7 +17,6 @@ export default class GemsSearchPage extends Component {
       searchValue: '',
       searchedGems: [],
       savedGems: localStorage.getItem('savedGems') ? JSON.parse(localStorage.getItem('savedGems')) : {},
-      // savedGems object makes it much faster to check if a particular gem is saved
       searchMessage: 'Search for a gem to see results.', // Error handling for Search
       searchView: true,
       loading: false,
@@ -43,6 +42,7 @@ export default class GemsSearchPage extends Component {
 
   toggleSaveGem = (gem) => {
     let { savedGems } = this.state;
+    // savedGems object indexed by name makes it much faster to check if a particular gem is saved
     if (gem.name in savedGems) {
       delete savedGems[gem.name];
     }

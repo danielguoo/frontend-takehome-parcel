@@ -1,5 +1,5 @@
 import React from "react";
-import { configure, mount, shallow } from 'enzyme';
+import { configure, mount } from 'enzyme';
 import renderer from 'react-test-renderer';
 import GemsSearchPage, { getRubyGems } from './index';
 import Adapter from 'enzyme-adapter-react-16';
@@ -26,12 +26,14 @@ describe('Current View', ()=> {
     expect(wrapper.find(SearchResultsList).length).toBe(1);
     expect(wrapper.find(SavedGemsList).length).toBe(0);
   });
+
   it('should show the saved gems view when the search view is toggled', () => {
     // wrapper.instance().toggleSearchView(); doesn't work on arrow functions?
     wrapper.setState({searchView: false});
     expect(wrapper.find(SearchResultsList).length).toBe(0);
     expect(wrapper.find(SavedGemsList).length).toBe(1);
   });
+
   it('should display the loading component if loading', () => {
     wrapper.setState({loading: true});
     expect(wrapper.find(ReactLoading).length).toBe(1);
@@ -50,6 +52,7 @@ describe('getRubyGems', () => {
       expect(getResponse.loading).toBe(false);
     });
   });
+
   it('should should set search Message when no results are found', () => {
     const mockGemsList = [];
     global.fetch = jest.fn().mockImplementation(() => Promise.resolve({json: () => (mockGemsList)}));
@@ -61,6 +64,7 @@ describe('getRubyGems', () => {
       expect(getResponse.loading).toBe(false);
     });
   });
+
   it('should should set an Error message if the API call fails', () => {
     global.fetch = jest.fn().mockImplementation(() => Promise.reject({e: "Network Error"}));
     return getRubyGems('test').then( getResponse  => {
@@ -71,5 +75,4 @@ describe('getRubyGems', () => {
       expect(getResponse.loading).toBe(false);
     });
   });
-  
 });

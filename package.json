@@ -27,7 +27,6 @@
     "concurrently": "^4.0.1",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
-    "eslint": "^7.5.0",
     "express": "^4.16.3",
     "parcel": "^1.9.7",
     "react": "^16.13.1",
@@ -41,6 +40,8 @@
     "@babel/core": "^7.10.5",
     "@babel/plugin-transform-runtime": "^7.10.5",
     "babel-jest": "^26.1.0",
+    "eslint": "^7.5.0",
+    "eslint-plugin-react": "^7.20.3",
     "jest": "^26.1.0",
     "parcel-bundler": "^1.12.4",
     "react-test-renderer": "^16.13.1"

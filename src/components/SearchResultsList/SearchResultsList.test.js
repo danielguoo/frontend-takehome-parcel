@@ -47,5 +47,4 @@ describe('GemInfo Component', () => {
     expect(wrapper.find('.Message').length).toBe(1);
     expect(wrapper.find('.Message').text()).toEqual(NO_RESULTS_MESSAGE);
   });
-
 }); 
