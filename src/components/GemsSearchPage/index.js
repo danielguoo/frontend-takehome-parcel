@@ -30,16 +30,9 @@ export default class GemsSearchPage extends Component {
 
   handleSubmit = (e) =>  {
     this.startLoading()
-    fetch(`${API_URL}?query=${this.state.searchValue}`)
-      // What if there are multiple pages of gems? add param &page=2
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-        const searchMessage = data.length === 0 ? NO_RESULTS_SEARCH_MESSAGE : '';
-        this.setState({searchedGems: data, searchMessage, searchView: true, loading: false});
-      }).catch(e => {
-        // console.log(e) for debugging purposes
-        this.setState({searchMessage: API_ERROR, loading: false})
+    getRubyGems(this.state.searchValue)
+      .then(newSearchState => {
+        this.setState(newSearchState);
       });
     e.preventDefault();
   }
@@ -104,3 +97,15 @@ export default class GemsSearchPage extends Component {
   }
 }
 
+export function getRubyGems(searchValue) {
+  return fetch(`${API_URL}?query=${searchValue}`)
+    // What if there are multiple pages of gems? add param &page=2
+    .then(response => response.json())
+    .then(data => {
+      const searchMessage = data.length === 0 ? NO_RESULTS_SEARCH_MESSAGE : '';
+      return {searchedGems: data, searchMessage, searchView: true, loading: false};
+    }).catch(e => {
+      // console.log(e) for debugging purposes
+      return {searchedGems: [], searchMessage: API_ERROR, searchView: true, loading: false};
+    });
+}

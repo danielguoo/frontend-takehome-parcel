@@ -1,11 +1,14 @@
 import React from "react";
 import { configure, mount, shallow } from 'enzyme';
 import renderer from 'react-test-renderer';
-import GemsSearchPage from './index';
+import GemsSearchPage, { getRubyGems } from './index';
 import Adapter from 'enzyme-adapter-react-16';
 import SearchResultsList from '../SearchResultsList';
 import SavedGemsList from '../SavedGemsList';
 import ReactLoading from "react-loading";
+
+const API_ERROR = 'There was an error while searching for your query. Please try again.';
+const NO_RESULTS_SEARCH_MESSAGE = 'No results found.'
 
 configure({ adapter: new Adapter() });
 
@@ -35,19 +38,38 @@ describe('Current View', ()=> {
   });
 });
 
-describe('handleSubmit', () => {
-  const fakeEvent = { preventDefault: () => 'preventDefault' };
-
-  it('should should set searchedGems data to fetch result', () => {
+describe('getRubyGems', () => {
+  it('should should return searchedGems in an object when there are gems found', () => {
     const mockGemsList = [{gem: null}];
-    global.fetch = jest.fn().mockImplementation(() => Promise.resolve({json: () => ({data: mockGemsList})}));
-    const wrapper = shallow(<GemsSearchPage/>);
-    wrapper.instance().handleSubmit(fakeEvent);
-    wrapper.update();
-    expect(global.fetch).toHaveBeenCalled();
-    expect(wrapper.state().searchedGems).toBe(mockGemsList);
-    expect(wrapper.state().searchMessage).toBe('');
-    expect(wrapper.state().searchView).toBe(true);
-    expect(wrapper.state().loading).toBe(false);
+    global.fetch = jest.fn().mockImplementation(() => Promise.resolve({json: () => (mockGemsList)}));
+    return getRubyGems('test').then( getResponse  => {
+      expect(global.fetch).toHaveBeenCalled();
+      expect(getResponse.searchedGems).toBe(mockGemsList);
+      expect(getResponse.searchMessage).toBe('');
+      expect(getResponse.searchView).toBe(true);
+      expect(getResponse.loading).toBe(false);
+    });
   });
+  it('should should set search Message when no results are found', () => {
+    const mockGemsList = [];
+    global.fetch = jest.fn().mockImplementation(() => Promise.resolve({json: () => (mockGemsList)}));
+    return getRubyGems('testefcds').then( getResponse  => {
+      expect(global.fetch).toHaveBeenCalled();
+      expect(getResponse.searchedGems).toBe(mockGemsList);
+      expect(getResponse.searchMessage).toBe(NO_RESULTS_SEARCH_MESSAGE);
+      expect(getResponse.searchView).toBe(true);
+      expect(getResponse.loading).toBe(false);
+    });
+  });
+  it('should should set an Error message if the API call fails', () => {
+    global.fetch = jest.fn().mockImplementation(() => Promise.reject({e: "Network Error"}));
+    return getRubyGems('test').then( getResponse  => {
+      expect(global.fetch).toHaveBeenCalled();
+      expect(getResponse.searchedGems).toStrictEqual([]);
+      expect(getResponse.searchMessage).toBe(API_ERROR);
+      expect(getResponse.searchView).toBe(true);
+      expect(getResponse.loading).toBe(false);
+    });
+  });
+  
 });
