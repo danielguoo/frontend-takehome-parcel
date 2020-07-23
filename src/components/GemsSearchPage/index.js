@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import SearchResultsList from '../SearchResultsList';
 import SavedGemsList from '../SavedGemsList';
 import Toggle from '../Toggle';
+import SearchBar from '../SearchBar'
 import './GemsSearchPage.css';
-import { MdSearch } from "react-icons/md";
 import ReactLoading from "react-loading";
 
 const API_URL = 'http://localhost:3000/api/v1/search.json';
+const API_ERROR = 'There was an error while searching for your query. Please try again.';
+const NO_RESULTS_SEARCH_MESSAGE = 'No results found.'
 
 export default class GemsSearchPage extends Component {
   constructor(props) {
@@ -15,7 +17,8 @@ export default class GemsSearchPage extends Component {
       searchValue: '',
       searchedGems: [],
       savedGems: localStorage.getItem('savedGems') ? JSON.parse(localStorage.getItem('savedGems')) : {},
-      message: 'Search for a gem to see results.',
+      // savedGems object makes it much faster to check if a particular gem is saved
+      searchMessage: 'Search for a gem to see results.', // Error handling for Search
       searchView: true,
       loading: false,
     };
@@ -31,11 +34,12 @@ export default class GemsSearchPage extends Component {
       // What if there are multiple pages of gems? add param &page=2
       .then(response => response.json())
       .then(data => {
-        data.length === 0 ?
-        this.setState({message: 'No results found.', loading: false}) :
-        this.setState({searchedGems: data, message: '', searchView: true, loading: false});
+        console.log(data);
+        const searchMessage = data.length === 0 ? NO_RESULTS_SEARCH_MESSAGE : '';
+        this.setState({searchedGems: data, searchMessage, searchView: true, loading: false});
       }).catch(e => {
-        this.setState({message: 'There was an error while searching for your query. Please try again.', loading: false})
+        // console.log(e) for debugging purposes
+        this.setState({searchMessage: API_ERROR, loading: false})
       });
     e.preventDefault();
   }
@@ -61,10 +65,10 @@ export default class GemsSearchPage extends Component {
   }
 
   render() {    
-    const { searchValue, searchedGems, savedGems, message, searchView, loading } = this.state;
+    const { searchValue, searchedGems, savedGems, searchMessage, searchView, loading } = this.state;
     return (
       <div className="Container">
-        <Search
+        <SearchBar
           searchValue={searchValue}
           handleChange={this.handleChange}
           handleSubmit={this.handleSubmit}
@@ -84,7 +88,7 @@ export default class GemsSearchPage extends Component {
           :
           searchView ?
             <SearchResultsList
-              message={message}
+              message={searchMessage}
               searchedGems={searchedGems}
               savedGems={savedGems}
               toggleSaveGem={this.toggleSaveGem}
@@ -100,14 +104,3 @@ export default class GemsSearchPage extends Component {
   }
 }
 
-const Search = ({searchValue, handleChange, handleSubmit}) => (
-  <form className="Search" onSubmit={handleSubmit}>
-    <input 
-      type="text"
-      placeholder="Search for Ruby Gems!"
-      value={searchValue}
-      onChange={handleChange}
-    />
-    <button type="submit"> <MdSearch/> </button>
-  </form>
-)

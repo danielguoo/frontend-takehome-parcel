@@ -28,7 +28,7 @@ describe('GemInfo Component', () => {
   it('should render an unfilled start when not saved', () => {
     expect(wrapper.find(MdStarBorder).length).toBe(1);
   });
-  it('should render a filled start when clicked', () => {
+  it('should render a filled star when clicked', () => {
     wrapper.find('.RightBlock').childAt(0).simulate('click');
     expect(toggleSaveGem).toBeCalled();
     wrapper.setProps({isSaved: true})

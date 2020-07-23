@@ -26,12 +26,14 @@ const NO_RESULTS_MESSAGE = 'No Results Found';
 
 describe('GemInfo Component', () => {
   const toggleSaveGem = jest.fn();
-  const wrapper = mount(<SearchResultsList 
-                          toggleSaveGem={toggleSaveGem}
-                          savedGems={saved}
-                          searchedGems={gems}
-                          message=''
-                        />);
+  const wrapper = mount((
+    <SearchResultsList 
+      toggleSaveGem={toggleSaveGem}
+      savedGems={saved}
+      searchedGems={gems}
+      message=''
+    />
+  ));
 
   it('render a GemInfo if there are searched gems', () => {
     expect(wrapper.find(GemInfo).length).toBe(1);
